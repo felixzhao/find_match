@@ -91,12 +91,16 @@ def beam_search(match_word_test, test_vectors, train_vectors, beam_width, unk_di
 
 if __name__ == '__main__':
 
+    if len(sys.argv) < 6:
+        print ' para: 1. train word embed file path\n 2. test word embed file path\n 3. beam width (int)\n 4. noise size for stroke feature (int) (if 0 < ns <= 4 then disable stroke feature)\n 5. stroke feature weight\n 6. input type (the type of word embed source: 33 or 50 or 67)\n'
+        
+
 ## get input
     train_path = sys.argv[1]
     test_path = sys.argv[2]
     beam_width = int(sys.argv[3])
     noise_size = int(sys.argv[4])
-    stroke_feature_weight = sys.argv[5]
+    stroke_feature_weight = int(sys.argv[5])
     input_type = sys.argv[6] # 33, 50, 67
 
     print 'trian path: ' + train_path
@@ -105,7 +109,7 @@ if __name__ == '__main__':
     print 'noise_size: ' + str(noise_size)
 
 ## declare
-    out_path = 'out.bw' + str(beam_width) + '.ns' + str(noise_size) + '.sfw'  + stroke_feature_weight + ',type' + input_type + '.txt'
+    out_path = 'out.bw' + str(beam_width) + '.ns' + str(noise_size) + '.sfw'  + str(stroke_feature_weight) + '.type' + str(input_type) + '.txt'
     stroke_dict = {}
     unk_dict = {}
     trainwords = set()
@@ -121,7 +125,7 @@ if __name__ == '__main__':
     if do_stroke_feature_flag == True:
         stroke_code_file = 'wubi_code_dict_6563.txt'
         terms = open(stroke_code_file,'r').readline().split(';')
-        unk_code = open('stroke_feature/unk_code_' + str(noise_size) + '.txt','r').readlines()
+        unk_code = open('stroke_feature/unk_code_ns' + str(noise_size) + '_type' + str(input_type) + '.txt','r').readlines()
 
     ## get stroke feature code
         words = [w.split() for w in terms]
@@ -133,7 +137,6 @@ if __name__ == '__main__':
             w = line.split(' ')
             if len(w) > 1:
                 unk_dict[w[0]] = w[1]
-
     
 ## get source data
     trainfile = gzip.open(train_path, "rb")

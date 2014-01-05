@@ -37,7 +37,10 @@ def find_cands(match_word_test, testvectors, trainvectors, topnum, doc_num, unk_
 
 ## get stroke feature score
         if do_strock_feature_flag == True:
-            match_score -= calcStrokeFeatureScore(match_word_test, match_word_train, unk_dict, stroke_dictstroke_feature_weight)
+           strokeFeatureScore = calcStrokeFeatureScore(match_word_test, match_word_train, unk_dict, stroke_dict, stroke_feature_weight)
+           print 'strokeFeatureScore: ' + str(strokeFeatureScore)
+
+           match_score -= strokeFeatureScore
 
         heappush(heap, (match_score,match_word_train,doc_num))
 
